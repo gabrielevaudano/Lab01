@@ -1,5 +1,4 @@
 package it.polito.tdp.parole;
-
 import it.polito.tdp.parole.model.Parole;
 
 import java.net.URL;
@@ -11,8 +10,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 public class FXMLController {
-	
-	Parole elenco ;
+	// Si potrebbe migliorare usando dei boolean e registrando i casi in cui 
+	// le funzioni non vadano a buon fine per errori utente o sistema
+	// Cosi i tempi di rimozione verrebbero  mostrati solo se l'operazione andasse a
+	// buon finee effettivamemte
+	Parole elenco = new Parole();
 
     @FXML
     private ResourceBundle resources;
@@ -33,13 +35,43 @@ public class FXMLController {
     private Button btnReset;
 
     @FXML
+    private Button rimuovi;
+
+    @FXML
+    private TextArea txtPrestazioni;
+    
+    @FXML
+    void doRemove(ActionEvent event) {
+    	long startTime = System.nanoTime();
+    	
+    	String s = txtResult.getSelectedText();
+    	elenco.rimuoviParola(s);
+    	txtResult.setText(elenco.getElencoString());
+
+    	txtPrestazioni.appendText("Tempo rimozione elemento: " + (System.nanoTime()-startTime) + " nanosecondi\n");
+    }
+    
+    @FXML
     void doInsert(ActionEvent event) {
-    	// TODO
+    	long startTime = System.nanoTime();
+    	
+    	String daInserire = txtParola.getText(); 	
+    	elenco.addParola(daInserire);
+    	txtResult.setText(elenco.getElencoString());
+    	
+    	txtPrestazioni.appendText("Tempo inserimento elemento: " + (System.nanoTime()-startTime) + " nanosecondi \n");
+
     }
 
     @FXML
     void doReset(ActionEvent event) {
-    	// TODO
+    	long startTime = System.nanoTime();
+    	
+    	elenco.reset();
+    	txtResult.setText(elenco.getElencoString());
+    	
+    	txtPrestazioni.appendText("Tempo rimozione lista: " + (System.nanoTime()-startTime) + " nanosecondi \n");
+
     }
 
     @FXML
